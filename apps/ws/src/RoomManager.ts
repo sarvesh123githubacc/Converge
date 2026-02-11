@@ -41,4 +41,16 @@ export class RoomManager{
             }
         })
     }
+    public otherUsers(user: User, roomId: string){
+        if (!this.rooms.has(roomId)) {
+            return;
+        }
+        const otherUsers: Array<User> = [];
+        this.rooms.get(roomId)?.forEach((u)=>{
+            if (u.id !== user.id) {
+                otherUsers.push(u);
+            }
+        })
+        return otherUsers
+    }
 }

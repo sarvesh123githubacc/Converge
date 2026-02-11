@@ -28,6 +28,12 @@ export const AddElementSchema = z.object({
     y: z.number(),
 })
 
+export const UpdateSpaceElementSchema = z.object({
+    spaceElementId: z.string(),
+    x: z.number(),
+    y: z.number()
+})
+
 export const DeleteElementSchema = z.object({
     id : z.string()
 })
@@ -57,6 +63,14 @@ export const CreateMapSchema = z.object({
         x: z.number(),
         y: z.number(),
     }))
+})
+
+export const CreatePrivateAreaSchema = z.object({
+    name: z.string(),
+    x: z.number(),
+    y: z.number(),
+    width: z.number(),
+    height: z.number()
 })
 
 declare global{

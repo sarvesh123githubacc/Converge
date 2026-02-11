@@ -7,6 +7,8 @@ import bcrypt from "bcrypt"
 import client from "@repo/db/client"
 import jwt  from "jsonwebtoken";
 import { JWT_PASSWORD } from "../../config.js";
+import { userMiddleware } from "../../middlewares/user.js";
+import { privateAreasRouter } from "./privateAreas.js";
 
 export const router = Router();
 
@@ -69,10 +71,13 @@ router.post("/signin", async (req, res) => {
     }
     const token = jwt.sign({
         userId: user.id,
-        role: user.role
+        role: user.role,
+        username: user.username
     }, JWT_PASSWORD)
     res.json({
-        token
+        token,
+        userId: user.id,
+        username: user.username
     })
 })
 
@@ -100,7 +105,18 @@ router.get("/avatars", async(req, res) => {
         }))
     })
 })
+router.get("/maps",userMiddleware, async(req, res)=>{
+    const maps = await client.map.findMany();
+    res.json({
+        maps: maps.map(x=>({
+         id: x.id,
+         name: x.name,
+         thumbnail: x.thumbnail   
+        }))
+    })
+})
 
 router.use("/user", userRouter)
 router.use("/space", spaceRouter)
 router.use("/admin", adminRouter)
+router.use("/private-areas", privateAreasRouter)

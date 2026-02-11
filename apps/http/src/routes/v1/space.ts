@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { AddElementSchema, CreateSpaceSchema, DeleteElementSchema } from "../../types/index.js";
+import { AddElementSchema, CreateSpaceSchema, DeleteElementSchema, UpdateSpaceElementSchema } from "../../types/index.js";
 import client from "@repo/db/client"
 import { userMiddleware } from "../../middlewares/user.js";
 
@@ -7,6 +7,7 @@ export const spaceRouter = Router();
 
 spaceRouter.post("/", userMiddleware, async (req, res) => {
     const parsedData = CreateSpaceSchema.safeParse(req.body);
+    console.log("parsedData", parsedData)
     if (!parsedData.success) {
         res.status(400).json({
             message: "Validation Failed"
@@ -26,7 +27,8 @@ spaceRouter.post("/", userMiddleware, async (req, res) => {
         })
 
         return res.json({
-            spaceId: space.id
+            spaceId: space.id,
+            success: true
         })
     }
 
@@ -71,10 +73,10 @@ spaceRouter.post("/", userMiddleware, async (req, res) => {
     })
 
     res.json({
-        spaceId: space.id
+        spaceId: space.id, 
+        success: true
     })
 })
-
 
 spaceRouter.get("/all", userMiddleware, async (req, res) => {
     const spaces = await client.space.findMany({
@@ -101,6 +103,16 @@ spaceRouter.post("/element", userMiddleware, async (req, res) => {
         })
     }
 
+    const element = await client.element.findUnique({
+        where: {
+            id: parsedData.data.elementId
+        }
+    })
+    if(!element){
+        return res.status(400).json({
+            message: "Element not found"
+        })
+    }
 
     const space = await client.space.findUnique({
         where: {
@@ -115,17 +127,17 @@ spaceRouter.post("/element", userMiddleware, async (req, res) => {
 
     if (!space) {
         return res.status(400).json({
-            message: "Space not found"
+            message: "Space not found in spaceElement"
         })
     }
 
-    if (parsedData.data.x < 0 || parsedData.data.y<0 ||parsedData.data.x > space.width || parsedData.data.y > space.height!) {
+    if (parsedData.data.x < 0 || parsedData.data.y<0 ||parsedData.data.x + element.width > 1350 || parsedData.data.y + element.height > 750) {
         return res.status(400).json({
             message: "Out of dimensions"
         })
     }
 
-    await client.spaceElement.create({
+    const createdSpaceElement = await client.spaceElement.create({
         data: {
             spaceId: parsedData.data.space,
             elementId: parsedData.data.elementId,
@@ -135,7 +147,30 @@ spaceRouter.post("/element", userMiddleware, async (req, res) => {
     })
 
     res.status(200).json({
-        message: "Element Added"
+        message: "Element Added",
+        id: createdSpaceElement.id
+    })
+})
+
+spaceRouter.put("/element", userMiddleware, async (req, res)=>{
+    const parsedData = UpdateSpaceElementSchema.safeParse(req.body);
+    if (!parsedData.success) {
+        return res.status(400).json({
+            message: "Validation Failed"
+        })
+    }
+    const updatedSpaceElement = await client.spaceElement.update({
+        where: {
+            id: parsedData.data.spaceElementId
+        },
+        data: {
+            x: parsedData.data.x,
+            y: parsedData.data.y
+        }
+    })
+    return res.json({
+        success: true,
+        message: "space element updated successfully"
     })
 })
 
@@ -166,8 +201,9 @@ spaceRouter.delete("/element", userMiddleware, async (req, res) => {
             id: parsedData.data.id
         }
     })
-    res.json({
-        message: "Element deleted"
+    return res.json({
+        success: true,
+        message: "Space Element deleted"
     })
 
 })
@@ -182,7 +218,8 @@ spaceRouter.get("/:spaceId", async (req, res) => {
                 include: {
                     element: true
                 }
-            }
+            },
+            creator: true
         }
     })
 
@@ -193,7 +230,10 @@ spaceRouter.get("/:spaceId", async (req, res) => {
     }
 
     res.json({
+        name: space.name,
         dimensions: `${space.width}x${space.height}`,
+        creatorId: space.creatorId,
+        creatorUsername : space.creator.username,
         elements: space.elements.map(e => ({
             id: e.id,
             element: {
@@ -247,11 +287,14 @@ spaceRouter.delete("/:spaceId", userMiddleware, async (req, res) => {
     client.spaceElement.deleteMany({
         where: { spaceId: req.params.spaceId }
     }),
+    client.privateAreas.deleteMany({
+        where: { spaceId: req.params.spaceId}
+    }),
     client.space.delete({
         where: { id: req.params.spaceId }
     })
 ]);
-    res.json({
+    return res.status(200).json({
         message: "Space deleted"
     })
 })

@@ -14,24 +14,26 @@ datasource db {
 }
 
 model User {
-  id       String  @id @unique @default(cuid())
-  username String  @unique
-  password String
-  avatarId String?
-  role     Role
-  spaces   Space[]
-  avatar   Avatar?  @relation(fields: [avatarId], references: [id])
+  id           String         @id @unique @default(cuid())
+  username     String         @unique
+  password     String
+  avatarId     String?
+  role         Role
+  spaces       Space[]
+  privateAreas PrivateAreas[]
+  avatar       Avatar?        @relation(fields: [avatarId], references: [id])
 }
 
 model Space {
-  id        String @id @unique @default(cuid())
-  name      String
-  width     Int
-  height    Int?
-  thumbnail String?
-  creatorId String
-  creator   User           @relation(fields: [creatorId], references: [id])
-  elements  SpaceElement[]
+  id           String         @id @unique @default(cuid())
+  name         String
+  width        Int
+  height       Int?
+  thumbnail    String?
+  creatorId    String
+  creator      User           @relation(fields: [creatorId], references: [id])
+  elements     SpaceElement[]
+  privateAreas PrivateAreas[]
 }
 
 model SpaceElement {
@@ -80,8 +82,21 @@ model Avatar {
   users    User[]
 }
 
+model PrivateAreas {
+  id        String @id @unique @default(cuid())
+  x         Int
+  y         Int
+  width     Int
+  height    Int
+  name      String
+  imageUrl  String
+  spaceId   String
+  creatorId String
+  space     Space  @relation(fields: [spaceId], references: [id])
+  user      User   @relation(fields: [creatorId], references: [id])
+}
+
 enum Role {
   Admin
   User
 }
-
