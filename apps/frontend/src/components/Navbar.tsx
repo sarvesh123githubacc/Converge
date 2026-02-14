@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import logo from "../assets/logo.png"
-import { CircleUserRound, Merge, SquarePen } from 'lucide-react'
+import { CircleUserRound, Merge } from 'lucide-react'
 
 const Navbar = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isProfileClicked, setIsProfileClicked] = useState(false);
-    const [username, setUsername] = useState("")
+    const [username, setUsername] = useState<string | null>(null)
     const navigate = useNavigate()
     function getUserStatus() {
         const token = sessionStorage.getItem('token');

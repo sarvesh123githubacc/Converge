@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Ellipsis, Pencil } from 'lucide-react';
 import defaultImg from "../assets/default.jpg"
 import { toast } from 'react-toastify';
+import { HTTP_URL } from '../config';
 
 const MySpacesDiv = () => {
   const [mySpaces, setMySpaces] = useState([]);
@@ -11,7 +12,7 @@ const MySpacesDiv = () => {
   const token = sessionStorage.getItem("token");
   useEffect(() => {
     async function getMySpaces() {
-      const res = await fetch("http://localhost:3000/api/v1/space/all", {
+      const res = await fetch(`${HTTP_URL}/api/v1/space/all`, {
         headers: {
           "authorization": `Bearer ${token}`
         }
@@ -24,9 +25,9 @@ const MySpacesDiv = () => {
   }, [])
   const navigate = useNavigate()
 
-  async function handleDelete (spaceId) {
+  async function handleDelete (spaceId: any) {
     try {
-      const res = await fetch(`http://localhost:3000/api/v1/space/${spaceId}`, {
+      const res = await fetch(`${HTTP_URL}/api/v1/space/${spaceId}`, {
         method: 'DELETE',
         headers: {
           "authorization": `Bearer ${token}`
@@ -35,7 +36,7 @@ const MySpacesDiv = () => {
       const response = await res.json();
       if(res.status == 200){
         toast(`${response.message}`)
-        const newSpaces = mySpaces.filter((item)=>
+        const newSpaces = mySpaces.filter((item: any)=>
           item.id !== spaceId
         )
         setMySpaces(newSpaces)
@@ -51,7 +52,7 @@ const MySpacesDiv = () => {
       {mySpaces.length > 0 ? (
         <div className="flex flex-wrap my-7 gap-x-5 gap-y-10 bg-[#F5F6FD] text-[#07482A] border-white rounded-lg h-60 min-w-6xl overflow-y-auto overflow-x-hidden mx-20 px-4 scrollbar-hide">
 
-          {mySpaces.map((item) => (
+          {mySpaces.map((item: any) => (
             <div
               key={item?.id}
               className="relative w-52"

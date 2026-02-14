@@ -5,6 +5,7 @@ import EmptyNavbar from '../components/EmptyNavbar';
 import AddElementsGuide from '../components/AddElementsGuide';
 import { toast } from 'react-toastify';
 import type { Element, Space } from '../types';
+import { HTTP_URL } from '../config';
 
 const AddElements = () => {
     const [allElements, setAllElements] = useState([]);
@@ -18,7 +19,7 @@ const AddElements = () => {
     const navigate = useNavigate();
     useEffect(() => {
         async function getSpace() {
-            const res = await fetch(`http://localhost:3000/api/v1/space/${spaceId}`, {
+            const res = await fetch(`${HTTP_URL}/api/v1/space/${spaceId}`, {
                 headers: {
                     "authorization": `Bearer ${token}`
                 }
@@ -33,7 +34,7 @@ const AddElements = () => {
     }, [spaceId])
     useEffect(() => {
         async function getElements() {
-            const res = await fetch(`http://localhost:3000/api/v1/elements`)
+            const res = await fetch(`${HTTP_URL}/api/v1/elements`)
             const response = await res.json();
             console.log("elements response", response)
             const allElements = response.elements;
@@ -134,7 +135,7 @@ const AddElements = () => {
                     currentElement.on('pointerout', () => {
                         currentElement.clearTint();
                     });
-                    currentElement.on('drag', (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
+                    currentElement.on('drag', (dragX: number, dragY: number) => {
                         console.log("dragX", dragX)
                         console.log("dragY", dragY)
                         const width = currentElement.getData('width');
@@ -175,7 +176,7 @@ const AddElements = () => {
                     const snappedX = Math.round(x / this.gridSize) * this.gridSize;
                     const snappedY = Math.round(y / this.gridSize) * this.gridSize;
                     try {
-                        const res = await fetch("http://localhost:3000/api/v1/space/element", {
+                        const res = await fetch(`${HTTP_URL}/api/v1/space/element`, {
                             method: "POST",
                             body: JSON.stringify({
                                 space: spaceId,
@@ -218,7 +219,7 @@ const AddElements = () => {
                     })
                     if (!instanceId) return;
                     try {
-                        const res = await fetch(`http://localhost:3000/api/v1/space/element`, {
+                        const res = await fetch(`http:${HTTP_URL}/api/v1/space/element`, {
                             method: "PUT",
                             body: JSON.stringify({
                                 spaceElementId: instanceId,
@@ -249,7 +250,7 @@ const AddElements = () => {
                         const instanceId = element.getData('instanceId')
                         if (!instanceId) return;
                         if (!confirm('Delete this element?')) return;
-                        const res = await fetch(`http://localhost:3000/api/v1/space/element`, {
+                        const res = await fetch(`${HTTP_URL}/api/v1/space/element`, {
                             method: "DELETE",
                             body: JSON.stringify({
                                 id: instanceId

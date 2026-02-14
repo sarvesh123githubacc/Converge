@@ -1,3 +1,4 @@
+import 'dotenv/config' 
 import express from "express"
 import { router } from "./routes/v1/index.js";
 import cors from "cors"
@@ -5,7 +6,7 @@ import cors from "cors"
 const app = express();
 
 app.use(cors({  
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL,
     credentials: true
 }))
 app.use(express.json())

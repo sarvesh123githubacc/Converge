@@ -1,4 +1,4 @@
-import { MousePointerClick, Move, Trash2, Lightbulb, Cross, CrossIcon, CircleDot } from "lucide-react";
+import { MousePointerClick, Move, Trash2, Lightbulb, CircleDot } from "lucide-react";
 
 const Step = ({ number, title, description, icon }:any) => {
   return (

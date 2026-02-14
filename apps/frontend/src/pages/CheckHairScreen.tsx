@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Mic,
@@ -17,7 +17,7 @@ const CheckHairScreen = () => {
   const streamRef = useRef<MediaStream | null>(null);
   // const [micOn, setMicOn] = useState(true);
   // const [cameraOn, setCameraOn] = useState(true);
-  const { setStream, micOn, setMicOn, cameraOn, setCameraOn } = useMedia();
+  const { micOn, setMicOn, cameraOn, setCameraOn } = useMedia();
 
 
   const inviteLink = `${window.location.origin}/join/${spaceId}`;

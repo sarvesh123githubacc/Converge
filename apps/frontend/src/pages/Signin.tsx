@@ -3,9 +3,8 @@ import { Eye, Mail, Lock, ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import meeting from "../assets//meeting.png"
 import { toast } from 'react-toastify';
+import { HTTP_URL } from '../config';
 
-
-const BACKEND_URL = "http://localhost:3000"
 const Signin = () => {
     const navigate = useNavigate()
     const [username, setUsername] = useState("");
@@ -13,7 +12,7 @@ const Signin = () => {
 
     async function handleSubmit() {
         try {
-            const res = await fetch(`${BACKEND_URL}/api/v1/signin`, {
+            const res = await fetch(`${HTTP_URL}/api/v1/signin`, {
                 method: "POST",
                 body: JSON.stringify({
                     username,

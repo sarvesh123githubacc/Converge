@@ -1,4 +1,4 @@
-import { Scissors, Keyboard, Edit3, Lightbulb, Delete, Trash2 } from "lucide-react";
+import { Scissors, Keyboard, Edit3, Lightbulb, Trash2 } from "lucide-react";
 
 const Step = ({ number, title, description, icon }: any) => {
   return (

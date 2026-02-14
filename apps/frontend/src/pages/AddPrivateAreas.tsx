@@ -4,8 +4,9 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import EmptyNavbar from '../components/EmptyNavbar'
 import PrivateAreasGuide from '../components/PrivateAreasGuide'
-import { Pencil, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import type { PrivateSpace, Space } from '../types'
+import { HTTP_URL } from '../config'
 
 const AddPrivateAreas = () => {
     const { spaceId } = useParams();
@@ -23,7 +24,7 @@ const AddPrivateAreas = () => {
 
     useEffect(() => {
         async function getSpace() {
-            const res = await fetch(`http://localhost:3000/api/v1/space/${spaceId}`, {
+            const res = await fetch(`${HTTP_URL}/api/v1/space/${spaceId}`, {
                 headers: {
                     "authorization": `Bearer ${token}`
                 }
@@ -41,7 +42,7 @@ const AddPrivateAreas = () => {
     useEffect(() => {
         async function getPrivateSpaces() {
             try {
-                const res = await fetch(`http://localhost:3000/api/v1/private-areas/${spaceId}`, {
+                const res = await fetch(`${HTTP_URL}/api/v1/private-areas/${spaceId}`, {
                     headers: {
                         "authorization": `Bearer ${token}`
                     }
@@ -219,7 +220,7 @@ const AddPrivateAreas = () => {
                     }
                 );
             }
-            createPlacedElement(key: string, x: number, y: number, width: number, height: number, isStatic: boolean, instanceId: string, elementId: string, imageUrl: string) {
+            createPlacedElement(key: string, x: number, y: number, width: number, height: number, isStatic: boolean, _instanceId: string, _elementId: string, imageUrl: string) {
                 const currentElement = this.add.image(x, y, key)
                 currentElement.setDisplaySize(width, height);
                 const isFloor = imageUrl.includes("tile") || imageUrl.includes("floor")
@@ -247,7 +248,7 @@ const AddPrivateAreas = () => {
                 formData.append("height", coords.height);
                 formData.append("image", imageBlob, "private-area.jpg");
                 try {
-                    const res = await fetch(`http://localhost:3000/api/v1/private-areas/${spaceId}`, {
+                    const res = await fetch(`${HTTP_URL}/api/v1/private-areas/${spaceId}`, {
                         method: "POST",
                         body: formData,
                         headers: {
@@ -298,7 +299,7 @@ const AddPrivateAreas = () => {
     
     async function onDelete(area: PrivateSpace) {
         try {
-            const res = await fetch(`http://localhost:3000/api/v1/private-areas/${area.id}`, {
+            const res = await fetch(`${HTTP_URL}/api/v1/private-areas/${area.id}`, {
                 method: "DELETE",
                 headers: {
                     "authorization": `Bearer ${token}`
@@ -401,7 +402,7 @@ const AddPrivateAreas = () => {
                                 {/* Left */}
                                 <div className="flex items-center gap-4">
                                     <img
-                                        src={`http://localhost:3000${area.imageUrl}`}
+                                        src={`${HTTP_URL}${area.imageUrl}`}
                                         alt={area.name}
                                         className="h-32 w-32 rounded-md object-cover border"
                                     />

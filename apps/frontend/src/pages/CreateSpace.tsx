@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { MoveRight } from 'lucide-react'
 import { toast } from 'react-toastify'
 import defaultImg from "../assets/default.jpg"
+import { HTTP_URL } from '../config'
 
 const CreateSpace = () => {
     const [searchParams] = useSearchParams();
@@ -21,7 +22,7 @@ const CreateSpace = () => {
         try {
             let response;
             if (mapId == "null") {
-                response = await fetch("http://localhost:3000/api/v1/space/", {
+                response = await fetch(`${HTTP_URL}/api/v1/space`, {
                     method: "POST",
                     body: JSON.stringify({
                         name: name,
@@ -33,7 +34,7 @@ const CreateSpace = () => {
                     }
                 })
             } else {
-                response = await fetch("http://localhost:3000/api/v1/space/", {
+                response = await fetch(`${HTTP_URL}/api/v1/space`, {
                     method: "POST",
                     body: JSON.stringify({
                         name: name,

@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Phaser, { Physics } from 'phaser';
+import Phaser from 'phaser';
 import { Device } from 'mediasoup-client';
 import { type Producer, type Consumer, type RtpCapabilities, type Transport } from 'mediasoup-client/types';
 import { toast } from 'react-toastify';
 import { LogOut, Mic, MicOff, Video, VideoOff } from 'lucide-react';
 import { useMedia } from '../context/MediaContext';
 import type { PrivateSpace, Space } from '../types';
+import { HTTP_URL, WS_URL } from '../config';
 
 const SpacePage = () => {
     const { spaceId } = useParams();
@@ -29,7 +30,7 @@ const SpacePage = () => {
     const streamRef = useRef<MediaStream | null>(null);
     const navigate = useNavigate()
 
-    const { setStream, micOn, setMicOn, cameraOn, setCameraOn } = useMedia();
+    const { micOn, setMicOn, cameraOn, setCameraOn } = useMedia();
 
     const currentPrivateAreaRef = useRef<PrivateSpace | null>(null);
     const producerRef = useRef<{
@@ -40,7 +41,7 @@ const SpacePage = () => {
 
     useEffect(() => {
         async function getSpace() {
-            const res = await fetch(`http://localhost:3000/api/v1/space/${spaceId}`, {
+            const res = await fetch(`${HTTP_URL}/api/v1/space/${spaceId}`, {
                 headers: {
                     "authorization": `Bearer ${token}`
                 }
@@ -50,7 +51,7 @@ const SpacePage = () => {
             const userId = sessionStorage.getItem("userId")
             console.log("token", token)
             setCurrentUserId(userId!)
-            const userRes = await fetch(`http://localhost:3000/api/v1/user/metadata/bulk?ids=[${userId}]`);
+            const userRes = await fetch(`${HTTP_URL}/api/v1/user/metadata/bulk?ids=[${userId}]`);
             const userResponse = await userRes.json();
             const avatar = userResponse?.avatars[0]?.imageUrl;
             const elements = response?.elements
@@ -575,7 +576,7 @@ const SpacePage = () => {
             initializeWebSocket() {
                 const currentToken = sessionStorage.getItem('token')
                 // Replace with your WebSocket URL
-                this.ws = new WebSocket('ws://localhost:3001');
+                this.ws = new WebSocket(`${WS_URL}`);
                 wsRef.current = this.ws;
 
                 this.ws.onopen = () => {
@@ -753,7 +754,7 @@ const SpacePage = () => {
             }
 
             async generateUserAvatar(userId: string) {
-                const res = await fetch(`http://localhost:3000/api/v1/user/metadata/bulk?ids=[${userId}]`)
+                const res = await fetch(`${HTTP_URL}/api/v1/user/metadata/bulk?ids=[${userId}]`)
                 const response = await res.json();
                 const userAvatar = response.avatars[0].imageUrl;
                 return userAvatar;
@@ -912,7 +913,7 @@ const SpacePage = () => {
 
     async function getPrivateAreas() {
         try {
-            const res = await fetch(`http://localhost:3000/api/v1/private-areas/${spaceId}`, {
+            const res = await fetch(`${HTTP_URL}/api/v1/private-areas/${spaceId}`, {
                 headers: {
                     "authorization": `Bearer ${token}`
                 }

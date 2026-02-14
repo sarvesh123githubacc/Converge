@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import defaultImg from "../assets/default.jpg"
+import { HTTP_URL } from '../config';
 
 const MapChooseBox = () => {
   const [maps, setMaps] = useState([]);
@@ -9,7 +10,7 @@ const MapChooseBox = () => {
 
   useEffect(() => {
     async function handleMaps() {
-      const res = await fetch("http://localhost:3000/api/v1/maps", {
+      const res = await fetch(`${HTTP_URL}/api/v1/maps`, {
         headers: {
           "authorization": `Bearer ${token}`
         }
@@ -43,7 +44,7 @@ const MapChooseBox = () => {
           scrollbar-hide
         "
       >
-        {maps.map((item) => (
+        {maps.map((item: any) => (
           <div
             key={item?.id}
             onClick={() => {
