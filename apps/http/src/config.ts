@@ -1,1 +1,1 @@
-export const JWT_PASSWORD = "123sar"
+export const JWT_PASSWORD = process.env.JWT_SECRET || "dev-fallback-secret"
