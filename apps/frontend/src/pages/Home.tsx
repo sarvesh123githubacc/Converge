@@ -30,8 +30,8 @@ const Home = () => {
     getUserAvatar()
   }, [userId])
   async function getAllAvatars() {
-    const res = await fetch('${HTTP_URL}/api/v1/avatars');
-    const userResponse = await res.json();
+    const res = await fetch(`${HTTP_URL}/api/v1/avatars`);
+    const userResponse = await res.json();  
     const resAvatars = userResponse?.avatars;
     setAvatars(resAvatars)
   }
@@ -41,7 +41,7 @@ const Home = () => {
 
   async function updateUserAvatar() {
     try {
-      const res = await fetch('${HTTP_URL}/api/v1/user/metadata', {
+      const res = await fetch(`${HTTP_URL}/api/v1/user/metadata`, {
         method: "POST",
         body: JSON.stringify({
           avatarId: selectedAvatar?.id
