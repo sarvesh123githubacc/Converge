@@ -135,7 +135,7 @@ const AddElements = () => {
                     currentElement.on('pointerout', () => {
                         currentElement.clearTint();
                     });
-                    currentElement.on('drag', (dragX: number, dragY: number) => {
+                    currentElement.on('drag', (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
                         console.log("dragX", dragX)
                         console.log("dragY", dragY)
                         const width = currentElement.getData('width');
@@ -219,7 +219,7 @@ const AddElements = () => {
                     })
                     if (!instanceId) return;
                     try {
-                        const res = await fetch(`http:${HTTP_URL}/api/v1/space/element`, {
+                        const res = await fetch(`${HTTP_URL}/api/v1/space/element`, {
                             method: "PUT",
                             body: JSON.stringify({
                                 spaceElementId: instanceId,
