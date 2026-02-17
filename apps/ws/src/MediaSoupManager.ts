@@ -141,12 +141,12 @@ export class MediaSoup {
                     {
                         protocol: "udp",
                         ip: "0.0.0.0",
-                        announcedAddress: "127.0.0.1"
+                        announcedAddress: process.env.EXTERNAL_IP as string
                     },
                     {
                         protocol: "tcp",
                         ip: "0.0.0.0",
-                        announcedAddress: "127.0.0.1"
+                        announcedAddress: process.env.EXTERNAL_IP as string
                     }
                 ],
                 enableUdp: true,

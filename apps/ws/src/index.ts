@@ -1,5 +1,7 @@
+import "./setup.js"
 import {WebSocketServer} from "ws"
 import { User } from "./User.js";
+
 const wss = new WebSocketServer({ port: 3001 });
 
 console.log(`WebSocket server running on ws://localhost:3001`);
