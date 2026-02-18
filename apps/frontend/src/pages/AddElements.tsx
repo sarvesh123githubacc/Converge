@@ -135,7 +135,7 @@ const AddElements = () => {
                     currentElement.on('pointerout', () => {
                         currentElement.clearTint();
                     });
-                    currentElement.on('drag', (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
+                    currentElement.on('drag', (_pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
                         console.log("dragX", dragX)
                         console.log("dragY", dragY)
                         const width = currentElement.getData('width');
